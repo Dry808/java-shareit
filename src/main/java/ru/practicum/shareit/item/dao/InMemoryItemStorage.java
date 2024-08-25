@@ -15,17 +15,20 @@ public class InMemoryItemStorage implements ItemRepository {
     private final Map<Integer, Item> items = new HashMap<>();
     private int itemsId = 0;
 
+    // Сохранить предмет
     @Override
     public Item createItem(Item item) {
-        item.setId(generateId());
+        item.setId(generateId()); // устанавливаем ID предмета
         return items.put(item.getId(), item);
     }
 
+    // обновить предмет
     @Override
     public Item updateItem(Item item) {
         return items.put(item.getId(), item);
     }
 
+    // получить предмет по ID
     @Override
     public Item getItem(int id) {
         if (!items.containsKey(id)) {
@@ -34,6 +37,7 @@ public class InMemoryItemStorage implements ItemRepository {
         return items.get(id);
     }
 
+    // получить список всех предметов пользователя
     @Override
     public List<Item> getAllItems(int userId) {
         return items.values().stream()
@@ -41,6 +45,7 @@ public class InMemoryItemStorage implements ItemRepository {
                 .collect(Collectors.toList());
     }
 
+    // поиск предметов
     @Override
     public  List<Item> searchItem(String text) {
         List<Item> result = new ArrayList<>();
@@ -54,6 +59,7 @@ public class InMemoryItemStorage implements ItemRepository {
         return result;
     }
 
+    // метод для генерации ID
     private int generateId() {
         return itemsId++;
     }

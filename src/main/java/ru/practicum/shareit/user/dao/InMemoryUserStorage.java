@@ -16,6 +16,7 @@ public class InMemoryUserStorage implements UserRepository {
     private Map<Integer, User> users = new HashMap<>();
     private int usersId = 0;
 
+    // создать пользователя
     @Override
     public User createUser(User user) {
         user.setId(generateId());
@@ -23,11 +24,13 @@ public class InMemoryUserStorage implements UserRepository {
         return user;
     }
 
+    // обновить пользователя
     @Override
     public User updateUser(User user) {
         return users.put(user.getId(), user);
     }
 
+    // получить пользователя по Id
     @Override
     public User getUser(int id) {
         if (!users.containsKey(id)) {
@@ -36,11 +39,13 @@ public class InMemoryUserStorage implements UserRepository {
         return users.get(id);
     }
 
+    // удалить пользователя
     @Override
     public User deleteUser(int id) {
         return users.remove(id);
     }
 
+    // получить список всех пользователей
     @Override
     public List<User> getAllUsers() {
         if (users.isEmpty()) {

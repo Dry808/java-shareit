@@ -19,6 +19,7 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    // возвращает HTTP код 403
     @ExceptionHandler
     @ResponseStatus(HttpStatus.FORBIDDEN)
     ErrorResponse accessDeniedException(final AccessDeniedException e) {

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * TODO Sprint add-controllers.
+ * Модель пользователя
  */
 @Data
 @AllArgsConstructor

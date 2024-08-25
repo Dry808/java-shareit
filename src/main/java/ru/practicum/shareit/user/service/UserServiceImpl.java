@@ -16,13 +16,15 @@ public class UserServiceImpl implements UserService {
         this.inMemoryStorage = inMemoryStorage;
     }
 
+    // Создание пользователя
     @Override
     public UserDto createUser(UserDto userDto) {
-        validateEmail(userDto.getEmail());
+        validateEmail(userDto.getEmail()); // проверка на уникальность Email
         User user = inMemoryStorage.createUser(UserMapper.toUser(userDto));
         return UserMapper.toUserDto(user);
     }
 
+    // Обновление пользователя
     @Override
     public UserDto updateUser(int id, UserDto userDto) {
         User oldUser = inMemoryStorage.getUser(id);
@@ -40,18 +42,21 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toUserDto(oldUser);
     }
 
+    // Получить пользователя по ID
     @Override
     public UserDto getUser(int id) {
         User user = inMemoryStorage.getUser(id);
         return UserMapper.toUserDto(user);
     }
 
+    // Удалить пользователя
     @Override
     public UserDto deleteUser(int id) {
         User user = inMemoryStorage.deleteUser(id);
         return UserMapper.toUserDto(user);
     }
 
+    // Метод для проверки уникальности email
     private void validateEmail(String email) {
         boolean emailExists = inMemoryStorage.getAllUsers().stream()
                 .anyMatch(user -> user.getEmail().equalsIgnoreCase(email));
