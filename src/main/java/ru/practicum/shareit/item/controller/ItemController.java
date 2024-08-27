@@ -18,7 +18,7 @@ import java.util.List;
 public class ItemController {
     private ItemService itemService;
 
-    ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
