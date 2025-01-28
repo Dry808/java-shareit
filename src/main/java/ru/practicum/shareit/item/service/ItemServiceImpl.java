@@ -1,8 +1,10 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.AccessDeniedException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -17,28 +19,30 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ItemServiceImpl implements ItemService {
-    private ItemRepository itemStorage;
-    private UserRepository userStorage;
+    private ItemRepository itemRepository;
+    private UserRepository userRepository;
 
-    ItemServiceImpl(ItemRepository itemStorage, UserRepository userStorage) {
-        this.itemStorage = itemStorage;
-        this.userStorage = userStorage;
+    @Autowired
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
+        this.itemRepository = itemRepository;
+        this.userRepository = userRepository;
     }
 
     // Создать предмет
     @Override
     public ItemDto createItem(int userId, ItemDto itemDto) {
-        User user = userStorage.getUser(userId);
+        User user = userRepository.findById(userId).orElseThrow(()
+                -> new NotFoundException("Пользователь не найден"));
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(user); // устанавливаем владельца предмета
-        itemStorage.createItem(item);
+        itemRepository.save(item);
         return ItemMapper.toItemDto(item);
     }
 
     // Обновить данные предмета
     @Override
     public ItemDto updateItem(int itemId, int userId, ItemDto itemDto) {
-        Item oldItem = itemStorage.getItem(itemId); // проверяет наличие Item
+        Item oldItem = itemRepository.findById(itemId).orElseThrow(); // проверяет наличие Item
         if (oldItem.getOwner().getId() != userId) { // проверка доступа
             throw new AccessDeniedException("Вы не можете редактировать Item пользователя c ID=" + oldItem.getId());
         }
@@ -54,20 +58,20 @@ public class ItemServiceImpl implements ItemService {
         if (itemDto.getAvailable() != null) {
             oldItem.setAvailable(itemDto.getAvailable());
         }
-        itemStorage.updateItem(oldItem);
+        itemRepository.save(oldItem);
         return ItemMapper.toItemDto(oldItem);
     }
 
     // Получить предмет по ID
     @Override
     public ItemDto getItem(int id) {
-        return ItemMapper.toItemDto(itemStorage.getItem(id));
+        return ItemMapper.toItemDto(itemRepository.findById(id).orElseThrow());
     }
 
     // Получить список всех предметов пользователя по его ID
     @Override
     public List<ItemDto> getAllItems(int userId) {
-        List<Item> userItems = itemStorage.getAllItems(userId);
+        List<Item> userItems = itemRepository.findByOwnerId(userId);
         return userItems.stream()
                 .map(ItemMapper::toItemDto) // заменяем Item на ItemDTO
                 .collect(Collectors.toList());
@@ -79,8 +83,9 @@ public class ItemServiceImpl implements ItemService {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        List<Item> itemList = itemStorage.searchItem(text);
+        List<Item> itemList = itemRepository.findItemByNameAndDescription(text);
         return itemList.stream()
+                .filter(Item::getAvailable) // фильтруем поиск только по тем предметам которые доступны
                 .map(ItemMapper::toItemDto) // заменяем Item на ItemDTO
                 .collect(Collectors.toList());
     }
