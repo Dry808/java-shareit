@@ -1,5 +1,5 @@
 package ru.practicum.shareit.booking;
 
 public enum BookingState {
-    WAITING, APPROVED, REJECTED
+    ALL, CURRENT, PAST, FUTURE, WAITING, REJECTED
 }

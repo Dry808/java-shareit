@@ -5,18 +5,17 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.Instant;
+import java.time.LocalTime;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Getter
-@Setter
-public class BookingDto {
+@NoArgsConstructor
+public class BookingCreateDto {
         private int id;
         @FutureOrPresent
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
@@ -24,7 +23,7 @@ public class BookingDto {
         @Future
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
         private Instant end;
-        private ItemDto item;
-        private UserDto booker;
+        private Integer itemId;
+        private Integer booker;
         private String status;
 }

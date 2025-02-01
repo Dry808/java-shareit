@@ -19,4 +19,5 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     @Query(FIND_ITEMS_BY_NAME_AND_DESCR)
     List<Item> findItemByNameAndDescription(@Param("text") String text);
 
+    boolean existsByOwner_Id(int ownerId);
 }

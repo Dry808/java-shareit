@@ -2,13 +2,19 @@ package ru.practicum.shareit.booking.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.dao.ItemRepository;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.Instant;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 @Component
@@ -33,7 +39,21 @@ public class BookingMapper {
                 .end(bookingDto.getEnd())
                 .item(ItemMapper.toItem(bookingDto.getItem()))
                 .booker(UserMapper.toUser(bookingDto.getBooker()))
-                .status(bookingDto.getStatus())
+                .status(BookingStatus.WAITING)
                 .build();
     }
+
+    public static Booking toBooking(BookingCreateDto bookingCreateDto) {
+        return Booking.builder()
+                .id(bookingCreateDto.getId())
+                .start(Instant.from(bookingCreateDto.getStart()))
+                .end(Instant.from((bookingCreateDto.getEnd())))
+                .item(new Item())
+                .booker(new User())
+                .status(BookingStatus.WAITING)
+                .build();
+    }
+
+
+
 }
