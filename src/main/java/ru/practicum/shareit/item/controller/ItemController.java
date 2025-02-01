@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithDate;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -44,7 +45,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") int userId) {
+    public List<ItemDtoWithDate> getAllItems(@RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получение списка всех предметов пользователя с ID=" + userId);
         return itemService.getAllItems(userId);
     }

@@ -3,17 +3,27 @@ package ru.practicum.shareit.item.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dao.BookingRepository;
+import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithDate;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dao.UserRepository;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -21,11 +31,14 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private ItemRepository itemRepository;
     private UserRepository userRepository;
+    private BookingRepository bookingRepository;
 
     @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
+                           BookingRepository bookingRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     // Создать предмет
@@ -69,13 +82,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     // Получить список всех предметов пользователя по его ID
-    @Override
-    public List<ItemDto> getAllItems(int userId) {
-        List<Item> userItems = itemRepository.findByOwnerId(userId);
-        return userItems.stream()
-                .map(ItemMapper::toItemDto) // заменяем Item на ItemDTO
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<ItemDto> getAllItems(int userId) {
+//        List<Item> userItems = itemRepository.findByOwnerId(userId);
+//        return userItems.stream()
+//                .map(ItemMapper::toItemDto) // заменяем Item на ItemDTO
+//                .collect(Collectors.toList());
+//    }
 
     // Поиск предмета
     @Override
@@ -89,5 +102,23 @@ public class ItemServiceImpl implements ItemService {
                 .map(ItemMapper::toItemDto) // заменяем Item на ItemDTO
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<ItemDtoWithDate> getAllItems(int userId) {
+        List<Item> userItems = itemRepository.findByOwnerId(userId);
+        return userItems.stream()
+                .map(item -> {
+                    ItemDtoWithDate itemDto = ItemMapper.toItemDtoWithDate(item);
+                    // Получаем последнее и следующее бронирование
+                    Optional<Booking> lastBooking = bookingRepository.findLastBookingByItemId(item.getId());
+                    Optional<Booking> nextBooking = bookingRepository.findNextBookingByItemId(item.getId());
 
+                    // Добавляем даты в DTO
+                    lastBooking.ifPresent(booking -> itemDto.setLastBooking(
+                            booking.getEnd().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                    nextBooking.ifPresent(booking -> itemDto.setNextBooking(
+                            booking.getStart().atZone(ZoneId.systemDefault()).toLocalDateTime()));
+                    return itemDto;
+                })
+                .collect(Collectors.toList());
+    }
 }

@@ -1,7 +1,11 @@
 package ru.practicum.shareit.item.mapper;
 
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithDate;
 import ru.practicum.shareit.item.model.Item;
+
+import java.util.Optional;
 
 /**
  * Mapper (Item <-> ItemDto)
@@ -26,4 +30,16 @@ public class ItemMapper {
                 .build();
     }
 
+    public static ItemDtoWithDate toItemDtoWithDate(Item item) {
+        return new ItemDtoWithDate(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                item.getRequest() != null ? item.getRequest().getId() : null,
+                null,
+                null
+        );
+
+    }
 }
