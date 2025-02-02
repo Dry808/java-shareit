@@ -88,10 +88,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDtoWithDate getItem(int id) {
         Item item = itemRepository.findById(id).orElseThrow();
+
         //  ItemDtoWithDate itemDtoWithDate = itemWithBookingsDate(item);
         ItemDtoWithDate itemDto = ItemMapper.toItemDtoWithDate(item,
                 commentRepository.findByItemOwnerId(item.getOwner().getId()));
-        List<Comment> com = commentRepository.findByItemOwnerId(item.getOwner().getId());
+
         // Получаем последнее и следующее бронирование
         Optional<Booking> lastBooking = bookingRepository.findLastBookingByItemId(id);
         Optional<Booking> nextBooking = bookingRepository.findNextBookingByItemId(id);
@@ -166,22 +167,4 @@ public class ItemServiceImpl implements ItemService {
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
     }
-
-    private ItemDtoWithDate itemWithBookingsDate(Item item) {
-        ItemDtoWithDate itemDto = ItemMapper.toItemDtoWithDate(item,
-                commentRepository.findByItemId(item.getId()));
-
-        // Получаем последнее и следующее бронирование
-        Optional<Booking> lastBooking = bookingRepository.findLastBookingByItemId(item.getId());
-        Optional<Booking> nextBooking = bookingRepository.findNextBookingByItemId(item.getId());
-
-        // Добавляем даты в DTO
-        lastBooking.ifPresent(booking -> itemDto.setLastBooking(
-                booking.getEnd().atZone(ZoneId.systemDefault()).toLocalDateTime()));
-        nextBooking.ifPresent(booking -> itemDto.setNextBooking(
-                booking.getStart().atZone(ZoneId.systemDefault()).toLocalDateTime()));
-
-        return itemDto;
-    }
-
 }

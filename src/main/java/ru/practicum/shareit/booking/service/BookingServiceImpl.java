@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
                 -> new NotFoundException("Пользователь не найден")));
         booking.setItem(itemRepository.findById(bookingDto.getItemId()).orElseThrow(()
                 -> new NotFoundException("Инструмент не найден")));
-        ;
+
 
         if (!booking.getItem().getAvailable()) {        // Проверка на доступность товара
             throw new RuntimeException("Инструмент не доступен для бронирования");
@@ -52,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto approveBooking(int bookingId, boolean approved, int userId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow();
         if (userId != booking.getItem().getOwner().getId()) {
-            throw new AccessDeniedException("Вы не можете подверждать бронирование чужой вещи");
+            throw new AccessDeniedException("Вы не можете подвердить бронирование чужой вещи");
         }
         if (approved) {
             booking.setStatus(BookingStatus.APPROVED);

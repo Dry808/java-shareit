@@ -56,10 +56,6 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Optional<Booking> findNextBookingByItemId(@Param("itemId") int itemId);
 
     // проверка на бронь
-    Boolean existsByBooker_IdAndItem_IdAndStatusIsAndEndBefore(int bookerId,
-                                                               int itemId,
-                                                               BookingStatus status, Instant time);
-
     List<Booking> findByBooker_IdAndItem_IdAndStatusIsAndEndBefore(
             int bookerId,
             int itemId,
