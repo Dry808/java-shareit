@@ -12,6 +12,7 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.Instant;
+import java.util.ArrayList;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class BookingMapper {
                 booking.getId(),
                 booking.getStart(),
                 booking.getEnd(),
-                ItemMapper.toItemDto(booking.getItem()),
+                ItemMapper.toItemDto(booking.getItem(), new ArrayList<>()),
                 UserMapper.toUserDto(booking.getBooker()),
                 booking.getStatus().toString()
         );

@@ -59,6 +59,5 @@ public class BookingController {
             @RequestHeader("X-Sharer-User-Id") int userId) {
         return bookingService.getAllByOwners(state, userId);
     }
-    
 }
 

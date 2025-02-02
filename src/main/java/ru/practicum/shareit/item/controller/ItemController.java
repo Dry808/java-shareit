@@ -3,10 +3,12 @@ package ru.practicum.shareit.item.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoWithDate;
+
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.user.service.UserService;
+
 
 import java.util.List;
 
@@ -30,6 +32,14 @@ public class ItemController {
         return itemService.createItem(userId, itemDto);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@PathVariable int itemId,
+                                    @RequestHeader("X-Sharer-User-Id") int userId,
+                                    @RequestBody CommentDto commentDto) {
+        return itemService.createComment(itemId, userId, commentDto);
+    }
+
+
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@PathVariable int itemId,
                               @RequestHeader("X-Sharer-User-Id") int userId,
@@ -39,7 +49,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable int itemId) {
+    public ItemDtoWithDate getItem(@PathVariable int itemId) {
         log.info("Получение предмета с ID=" + itemId);
         return itemService.getItem(itemId);
     }

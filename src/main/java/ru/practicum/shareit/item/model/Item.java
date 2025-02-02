@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
@@ -40,11 +40,11 @@ public class Item {
     private Boolean available;
 
     @ManyToOne
-    @JoinColumn(name= "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User owner;
 
     @ManyToOne
-    @JoinColumn(name= "request_id")
+    @JoinColumn(name = "request_id")
     private ItemRequest request;
 
 }

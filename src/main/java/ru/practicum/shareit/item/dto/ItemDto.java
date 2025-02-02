@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * DTO
  */
@@ -21,4 +23,5 @@ public class ItemDto {
     @NotNull
     private Boolean available;
     private Integer request;
+    List<CommentDto> comments;
 }

@@ -24,7 +24,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name= "start_date")
+    @Column(name = "start_date")
     private Instant start;
 
     @Column(name = "end_date")
@@ -38,7 +38,7 @@ public class Booking {
     @JoinColumn(name = "user_id")
     private User booker;
 
-    @Column(name= "status")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 }

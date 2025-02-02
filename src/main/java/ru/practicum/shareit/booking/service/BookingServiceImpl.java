@@ -38,7 +38,8 @@ public class BookingServiceImpl implements BookingService {
         booking.setBooker(userRepository.findById(userId).orElseThrow(()
                 -> new NotFoundException("Пользователь не найден")));
         booking.setItem(itemRepository.findById(bookingDto.getItemId()).orElseThrow(()
-                -> new NotFoundException("Инструмент не найден")));;
+                -> new NotFoundException("Инструмент не найден")));
+        ;
 
         if (!booking.getItem().getAvailable()) {        // Проверка на доступность товара
             throw new RuntimeException("Инструмент не доступен для бронирования");
@@ -48,8 +49,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto approveBooking(int bookingId, boolean approved, int userId ) {
-        Booking booking = bookingRepository.getReferenceById(bookingId);
+    public BookingDto approveBooking(int bookingId, boolean approved, int userId) {
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow();
         if (userId != booking.getItem().getOwner().getId()) {
             throw new AccessDeniedException("Вы не можете подверждать бронирование чужой вещи");
         }
@@ -60,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         bookingRepository.save(booking);
-        return  BookingMapper.toBookingDto(booking);
+        return BookingMapper.toBookingDto(booking);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getAllByOwners(BookingState state, int userId) {
-        if(!itemRepository.existsByOwner_Id(userId)) {
+        if (!itemRepository.existsByOwner_Id(userId)) {
             throw new NotFoundException("У пользователя с ID" + userId + "нет вещей");
         }
         List<Booking> bookings;
