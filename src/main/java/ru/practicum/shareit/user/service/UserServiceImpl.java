@@ -1,36 +1,38 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
-    private final UserRepository inMemoryStorage;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository inMemoryStorage) {
-        this.inMemoryStorage = inMemoryStorage;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     // Создание пользователя
     @Override
     public UserDto createUser(UserDto userDto) {
-        validateEmail(userDto.getEmail()); // проверка на уникальность Email
-        User user = inMemoryStorage.createUser(UserMapper.toUser(userDto));
+        User user = userRepository.save(UserMapper.toUser(userDto));
         return UserMapper.toUserDto(user);
     }
 
     // Обновление пользователя
     @Override
     public UserDto updateUser(int id, UserDto userDto) {
-        User oldUser = inMemoryStorage.getUser(id);
+        User oldUser = userRepository.findById(id).orElseThrow(()
+                -> new NotFoundException("Пользователь не найден"));;
 
         if (userDto.getEmail() != null) {
-            validateEmail(userDto.getEmail());
             oldUser.setEmail(userDto.getEmail());
         }
 
@@ -38,27 +40,27 @@ public class UserServiceImpl implements UserService {
             oldUser.setName(userDto.getName());
         }
 
-        inMemoryStorage.updateUser(oldUser);
+        userRepository.save(oldUser);
         return UserMapper.toUserDto(oldUser);
     }
 
     // Получить пользователя по ID
     @Override
     public UserDto getUser(int id) {
-        User user = inMemoryStorage.getUser(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         return UserMapper.toUserDto(user);
     }
 
     // Удалить пользователя
     @Override
-    public UserDto deleteUser(int id) {
-        User user = inMemoryStorage.deleteUser(id);
-        return UserMapper.toUserDto(user);
+    public void deleteUser(int id) {
+        userRepository.deleteById(id);
     }
 
     // Метод для проверки уникальности email
+    @Deprecated
     private void validateEmail(String email) {
-        boolean emailExists = inMemoryStorage.getAllUsers().stream()
+        boolean emailExists = userRepository.findAll().stream()
                 .anyMatch(user -> user.getEmail().equalsIgnoreCase(email));
 
         if (emailExists) {

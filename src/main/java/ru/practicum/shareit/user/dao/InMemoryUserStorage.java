@@ -10,14 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 @Component
 @Slf4j
-public class InMemoryUserStorage implements UserRepository {
+class InMemoryUserStorage  {
     private Map<Integer, User> users = new HashMap<>();
     private int usersId = 0;
 
     // создать пользователя
-    @Override
     public User createUser(User user) {
         user.setId(generateId());
         users.put(user.getId(), user);
@@ -25,13 +25,12 @@ public class InMemoryUserStorage implements UserRepository {
     }
 
     // обновить пользователя
-    @Override
     public User updateUser(User user) {
         return users.put(user.getId(), user);
     }
 
     // получить пользователя по Id
-    @Override
+
     public User getUser(int id) {
         if (!users.containsKey(id)) {
             throw new NotFoundException("Пользователь с ID = " + id + "не найден");
@@ -40,13 +39,12 @@ public class InMemoryUserStorage implements UserRepository {
     }
 
     // удалить пользователя
-    @Override
+
     public User deleteUser(int id) {
         return users.remove(id);
     }
 
     // получить список всех пользователей
-    @Override
     public List<User> getAllUsers() {
         if (users.isEmpty()) {
             return new ArrayList<>();

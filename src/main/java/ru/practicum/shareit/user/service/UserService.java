@@ -9,5 +9,5 @@ public interface UserService {
 
     UserDto getUser(int id);
 
-    UserDto deleteUser(int id);
+    void deleteUser(int id);
 }

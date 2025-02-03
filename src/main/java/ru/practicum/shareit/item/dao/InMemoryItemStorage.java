@@ -10,26 +10,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Component
-public class InMemoryItemStorage implements ItemRepository {
+public class InMemoryItemStorage {
     private final Map<Integer, Item> items = new HashMap<>();
     private int itemsId = 0;
 
     // Сохранить предмет
-    @Override
     public Item createItem(Item item) {
         item.setId(generateId()); // устанавливаем ID предмета
         return items.put(item.getId(), item);
     }
 
     // обновить предмет
-    @Override
     public Item updateItem(Item item) {
         return items.put(item.getId(), item);
     }
 
     // получить предмет по ID
-    @Override
     public Item getItem(int id) {
         if (!items.containsKey(id)) {
             throw new NotFoundException("Предмет с ID = " + id + "не найден");
@@ -38,7 +36,6 @@ public class InMemoryItemStorage implements ItemRepository {
     }
 
     // получить список всех предметов пользователя
-    @Override
     public List<Item> getAllItems(int userId) {
         return items.values().stream()
                 .filter(item -> item.getOwner().getId() == userId)
@@ -46,7 +43,6 @@ public class InMemoryItemStorage implements ItemRepository {
     }
 
     // поиск предметов
-    @Override
     public  List<Item> searchItem(String text) {
         List<Item> result = new ArrayList<>();
         for (Item item : items.values()) {

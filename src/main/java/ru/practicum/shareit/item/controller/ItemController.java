@@ -3,8 +3,12 @@ package ru.practicum.shareit.item.controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoWithDate;
+
 import ru.practicum.shareit.item.service.ItemService;
+
 
 import java.util.List;
 
@@ -28,6 +32,14 @@ public class ItemController {
         return itemService.createItem(userId, itemDto);
     }
 
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@PathVariable int itemId,
+                                    @RequestHeader("X-Sharer-User-Id") int userId,
+                                    @RequestBody CommentDto commentDto) {
+        return itemService.createComment(itemId, userId, commentDto);
+    }
+
+
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@PathVariable int itemId,
                               @RequestHeader("X-Sharer-User-Id") int userId,
@@ -37,13 +49,13 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable int itemId) {
+    public ItemDtoWithDate getItem(@PathVariable int itemId) {
         log.info("Получение предмета с ID=" + itemId);
         return itemService.getItem(itemId);
     }
 
     @GetMapping
-    public List<ItemDto> getAllItems(@RequestHeader("X-Sharer-User-Id") int userId) {
+    public List<ItemDtoWithDate> getAllItems(@RequestHeader("X-Sharer-User-Id") int userId) {
         log.info("Получение списка всех предметов пользователя с ID=" + userId);
         return itemService.getAllItems(userId);
     }
