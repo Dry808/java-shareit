@@ -19,6 +19,7 @@ import ru.practicum.shareit.item.dto.ItemDtoWithDate;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dao.UserRepository;
 
@@ -38,14 +39,18 @@ public class ItemServiceImpl implements ItemService {
     private UserRepository userRepository;
     private BookingRepository bookingRepository;
     private CommentRepository commentRepository;
+    private ItemRequestRepository itemRequestRepository;
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
-                           BookingRepository bookingRepository, CommentRepository commentRepository) {
+                           BookingRepository bookingRepository, CommentRepository commentRepository,
+                           ItemRequestRepository itemRequestRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
+        this.itemRequestRepository = itemRequestRepository;
+
     }
 
     // Создать предмет
@@ -55,6 +60,10 @@ public class ItemServiceImpl implements ItemService {
                 -> new NotFoundException("Пользователь не найден"));
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(user); // устанавливаем владельца предмета
+        if (itemDto.getRequest() != null) {
+            item.setRequest(itemRequestRepository.findById(itemDto.getRequest()).orElseThrow());
+        }
+
         itemRepository.save(item);
 
         return ItemMapper.toItemDto(item, commentRepository.findByItemId(item.getId()));

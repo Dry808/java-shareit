@@ -18,4 +18,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     List<Item> findItemByNameAndDescription(@Param("text") String text);
 
     boolean existsByOwner_Id(int ownerId);
+
+    List<Item> findByRequestId(int requestId);
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class ItemDtoWithDate {
     @NotBlank
     private String description;
     private Boolean available;
+    @JsonProperty("requestId")
     private Integer request;
     private LocalDateTime lastBooking;
     private LocalDateTime nextBooking;

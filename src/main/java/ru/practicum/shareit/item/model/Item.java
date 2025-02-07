@@ -25,24 +25,19 @@ public class Item {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @NotBlank
     @NotNull
     @Column(name = "name")
     private String name;
-
     @NotNull
     @Column(name = "description")
     private String description;
-
     @NotNull
     @Column(name = "available")
     private Boolean available;
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User owner;
-
     @ManyToOne
     @JoinColumn(name = "request_id")
     private ItemRequest request;
