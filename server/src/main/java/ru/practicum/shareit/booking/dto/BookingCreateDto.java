@@ -12,6 +12,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
+@Builder
 public class BookingCreateDto {
         private int id;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")

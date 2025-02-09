@@ -65,6 +65,4 @@ public class ItemController {
         log.info("Поиск предметов по запросу: " + text);
         return itemService.searchItem(text);
     }
-
-
 }

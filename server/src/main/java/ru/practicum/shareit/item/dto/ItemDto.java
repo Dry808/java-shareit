@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ItemDto {
     private int id;
 
