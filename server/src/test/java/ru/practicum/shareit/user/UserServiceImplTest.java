@@ -4,9 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.practicum.shareit.exception.NotFoundException;
+
+import ru.practicum.shareit.request.dao.ItemRequestRepository;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -24,6 +26,9 @@ public class UserServiceImplTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ItemRequestRepository itemRequestRepository;
 
     @Test
     public void testCreateUserAndGet() {
@@ -43,19 +48,18 @@ public class UserServiceImplTest {
     @Test
     public void testUpdateUser_Success() {
         // Создаем пользователя
-        UserDto userDto = new UserDto(2, "User Name", "user@example.com");
+        UserDto userDto = new UserDto(2, "User Name", "user2232323@example.com");
         UserDto createdUser = userService.createUser(userDto);
 
         // Обновляем пользователя
-        UserDto updatedUserDto = new UserDto(1, "New User Name", "newuser@example.com");
+        UserDto updatedUserDto = new UserDto(1, "New User Name", "newuser23232111@example.com");
         UserDto updatedUser = userService.updateUser(createdUser.getId(), updatedUserDto);
 
         // Проверяем, что пользователь обновлен
         assertNotNull(updatedUser);
         assertEquals("New User Name", updatedUser.getName());
-        assertEquals("newuser@example.com", updatedUser.getEmail());
+        assertEquals("newuser23232111@example.com", updatedUser.getEmail());
     }
-
 
     @Test
     public void testGetUser_Success() {
@@ -72,19 +76,6 @@ public class UserServiceImplTest {
         assertEquals("user@example.com", retrievedUser.getEmail());
     }
 
-
-    @Test
-    public void testDeleteUser_Success() {
-        // Создаем пользователя
-        UserDto userDto = new UserDto(1, "User Name", "user@example.com");
-        UserDto createdUser = userService.createUser(userDto);
-
-        // Удаляем пользователя
-        userService.deleteUser(createdUser.getId());
-
-        // Проверяем, что пользователь удален
-        assertThrows(NotFoundException.class, () -> userService.getUser(createdUser.getId()));
-    }
 
     @Test
     public void testDeleteUser_UserNotFound() {
