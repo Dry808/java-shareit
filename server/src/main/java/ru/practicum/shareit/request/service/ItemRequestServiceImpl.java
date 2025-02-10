@@ -72,10 +72,15 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .map(ItemMapper::toItemDto)
                 .sorted(Comparator.comparing(ItemDto::getId).reversed())
                 .collect(Collectors.toList());
+        ItemRequestDto itemRequestDto;
 
-        ItemRequestDto itemRequestDto = ItemRequestMapper.itemRequestDto(itemRequestRepository.findById(requestId).orElseThrow(()
-                -> new NotFoundException("Запрос не найден")));
-        itemRequestDto.setItems(items); // устанавливаем ответы на запрос
+        if (requestId > 0) {
+            itemRequestDto = ItemRequestMapper.itemRequestDto(itemRequestRepository.findById(requestId).orElseThrow(()
+                    -> new NotFoundException("Запрос не найден")));
+            itemRequestDto.setItems(items); // устанавливаем ответы на запрос
+        }
+        itemRequestDto = new ItemRequestDto();
+        itemRequestDto.setItems(items);
         return itemRequestDto;
     }
 }
