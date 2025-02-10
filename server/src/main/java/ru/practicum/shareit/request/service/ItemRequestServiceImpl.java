@@ -38,8 +38,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         itemRequestDto.setRequestor(user);
         itemRequestDto.setCreated(Instant.now());
-        itemRequestRepository.save(ItemRequestMapper.toItemRequest(itemRequestDto));
-        return itemRequestDto;
+        ItemRequest request = itemRequestRepository.save(ItemRequestMapper.toItemRequest(itemRequestDto));
+        return ItemRequestMapper.itemRequestDto(request);
     }
 
     @Override
@@ -72,14 +72,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .map(ItemMapper::toItemDto)
                 .sorted(Comparator.comparing(ItemDto::getId).reversed())
                 .collect(Collectors.toList());
-        ItemRequestDto itemRequestDto;
+        ItemRequestDto itemRequestDto = ItemRequestMapper.itemRequestDto(itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException("Запрос не найден")));
 
-        if (requestId > 0) {
-            itemRequestDto = ItemRequestMapper.itemRequestDto(itemRequestRepository.findById(requestId).orElseThrow(()
-                    -> new NotFoundException("Запрос не найден")));
-            itemRequestDto.setItems(items); // устанавливаем ответы на запрос
-        }
-        itemRequestDto = new ItemRequestDto();
         itemRequestDto.setItems(items);
         return itemRequestDto;
     }

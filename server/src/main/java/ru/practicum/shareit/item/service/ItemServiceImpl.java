@@ -61,9 +61,8 @@ public class ItemServiceImpl implements ItemService {
                 -> new NotFoundException("Пользователь не найден"));
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(user); // устанавливаем владельца предмета
-        if (itemDto.getRequest() != null && itemDto.getRequest() > 0) {
-            item.setRequest(itemRequestRepository.findById(itemDto.getRequest()).orElseThrow(()
-                    -> new NotFoundException("Request не найден")));
+        if (itemDto.getRequest() != null) {
+            item.setRequest(itemRequestRepository.findById(itemDto.getRequest()).orElseThrow());
         }
 
         itemRepository.save(item);
