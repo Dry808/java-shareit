@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.item.dao.CommentRepository;
 import ru.practicum.shareit.item.dao.ItemRepository;
@@ -169,4 +170,69 @@ public class ItemServiceImplTest {
         assertEquals("Booker", createdComment.getAuthorName());
         assertNotNull(createdComment.getCreated());
     }
+
+    @Test
+    public void testUpdateItem_AccessDenied() {
+        ItemDto oldItem = itemService.createItem(user.getId(), item);
+
+        User anotherUser = new User(2, "Another User", "another@example.com");
+        userRepository.save(anotherUser);
+
+        ItemDto itemDtoNew = new ItemDto(oldItem.getId(),
+                "UpdateName",
+                "New Descp",
+                true,
+                null,
+                null);
+
+        assertThrows(AccessDeniedException.class, () -> itemService.updateItem(oldItem.getId(), anotherUser.getId(), itemDtoNew));
+    }
+
+    @Test
+    public void testGetAllItems() {
+        // Создаем предметы для пользователя
+        ItemDto item1 = new ItemDto(1, "Item 1", "Description 1", true, null, null);
+        ItemDto item2 = new ItemDto(2, "Item 2", "Description 2", true, null, null);
+        itemService.createItem(user.getId(), item1);
+        itemService.createItem(user.getId(), item2);
+
+        // Получаем все предметы пользователя
+        List<ItemDtoWithDate> items = itemService.getAllItems(user.getId());
+
+        // Проверяем
+        assertNotNull(items);
+        assertEquals(2, items.size());
+        assertEquals("Item 1", items.get(0).getName());
+        assertEquals("Item 2", items.get(1).getName());
+    }
+
+    @Test
+    public void testGetItem_WithBookings() {
+        // Создаем предмет
+        ItemDto itemDto = new ItemDto(1, "Item Name", "Item Description", true, null, null);
+        ItemDto createdItem = itemService.createItem(user.getId(), itemDto);
+
+        // Создаем пользователя, который будет бронировать предмет
+        User userBooker = new User(2, "Booker", "booker@mail.ru");
+        userRepository.save(userBooker);
+
+        // Создаем бронирование
+        Instant start = Instant.now().plusSeconds(1000);
+        Instant end = Instant.now().plusSeconds(2000);
+        Booking booking = new Booking(1, start, end, ItemMapper.toItem(createdItem), userBooker, BookingStatus.APPROVED);
+        bookingRepository.save(booking);
+
+        // Получаем предмет с датами бронирования
+        ItemDtoWithDate itemWithBookings = itemService.getItem(createdItem.getId());
+
+        // Проверяем
+        assertNotNull(itemWithBookings);
+        assertEquals(createdItem.getId(), itemWithBookings.getId());
+    }
+
+    @Test
+    public void testGetItemNotFound() {
+        assertThrows(Exception.class, () -> itemService.getItem(999));
+    }
+
 }

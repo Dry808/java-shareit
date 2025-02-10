@@ -5,9 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.dao.ItemRequestRepository;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -82,7 +84,41 @@ public class UserServiceImplTest {
         // Пытаемся удалить пользователя с несуществующим ID
         userService.deleteUser(999);
 
+
         // Проверяем, что нет исключения при удалении несуществующего пользователя
         assertTrue(true);
     }
+
+    @Test
+    public void testCreateUser_EmailAlreadyExists() {
+        // Создаем первого пользователя
+        UserDto userDto1 = new UserDto(1, "User1", "user1@example.com");
+        userService.createUser(userDto1);
+
+        // Пытаемся создать второго пользователя с таким же email
+        UserDto userDto2 = new UserDto(2, "User2", "user1@example.com");
+
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            userService.createUser(userDto2);
+        });
+    }
+
+    @Test
+    public void testUpdateUser_UserNotFound() {
+        // Пытаемся обновить пользователя с несуществующим ID
+        UserDto userDto = new UserDto(999, "New Name", "newemail@example.com");
+
+        assertThrows(NotFoundException.class, () -> {
+            userService.updateUser(999, userDto);
+        });
+    }
+
+    @Test
+    public void testGetUser_UserNotFound() {
+        // Пытаемся получить пользователя с несуществующим ID
+        assertThrows(NotFoundException.class, () -> {
+            userService.getUser(999);
+        });
+    }
+
 }

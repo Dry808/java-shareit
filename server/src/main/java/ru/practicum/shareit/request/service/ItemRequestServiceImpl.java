@@ -61,7 +61,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getAllRequest() {
-        return itemRequestRepository.findAll(Sort.by(Sort.Direction.DESC)).stream()
+        return itemRequestRepository.findAll(Sort.by(Sort.Direction.DESC, "created")).stream()
                 .map(ItemRequestMapper::itemRequestDto)
                 .collect(Collectors.toList());
     }
