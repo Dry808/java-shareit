@@ -1,4 +1,4 @@
-package ru.practicum.shareit.ItemRequest;
+package ru.practicum.shareit.ItemRequest.dto;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
