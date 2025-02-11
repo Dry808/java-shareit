@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 /**
  * DTO user
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

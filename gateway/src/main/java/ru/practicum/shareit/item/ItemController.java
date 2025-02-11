@@ -9,14 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
-
-
-
-
 /**
  * Контроллер Item
  */
-
 @Slf4j
 @RestController
 @RequestMapping("/items")

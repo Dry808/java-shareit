@@ -9,20 +9,17 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * DTO
+ * DTO item
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto {
     private int id;
-
     private String name;
-
     private String description;
-
     private Boolean available;
     @JsonProperty("requestId")
     private Integer request;
-    List<CommentDto> comments;
+    private List<CommentDto> comments;
 }

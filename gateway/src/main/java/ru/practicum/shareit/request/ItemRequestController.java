@@ -8,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
-
-
 /**
- * TODO Sprint add-item-requests.
+ * Контроллер request
  */
 @Slf4j
 @RestController

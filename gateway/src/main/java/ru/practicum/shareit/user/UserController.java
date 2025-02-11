@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.UserClient;
 import ru.practicum.shareit.user.dto.UserDto;
 
-
 /**
  * Контроллер user
  */

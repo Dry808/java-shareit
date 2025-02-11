@@ -10,7 +10,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 import java.util.List;
 
 /**
- * TODO Sprint add-bookings.
+ * Контроллер booking
  */
 @Slf4j
 @RestController

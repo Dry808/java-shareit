@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * TODO Sprint add-item-requests.
+ * DTO request
  */
 @Data
 @AllArgsConstructor

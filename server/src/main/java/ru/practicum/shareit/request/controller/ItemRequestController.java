@@ -8,14 +8,13 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import java.util.List;
 
 /**
- * TODO Sprint add-item-requests.
+ * контроллер request
  */
 @RestController
 @Slf4j
 @RequestMapping(path = "/requests")
-
 public class ItemRequestController {
-    ItemRequestService itemRequestService;
+    private ItemRequestService itemRequestService;
 
     public ItemRequestController(ItemRequestService itemRequestService) {
         this.itemRequestService = itemRequestService;

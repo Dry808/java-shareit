@@ -21,5 +21,5 @@ public class ItemDtoWithDate {
     private Integer request;
     private LocalDateTime lastBooking;
     private LocalDateTime nextBooking;
-    List<CommentDto> comments;
+    private List<CommentDto> comments;
 }

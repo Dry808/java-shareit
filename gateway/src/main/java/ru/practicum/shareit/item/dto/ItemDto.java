@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * DTO
+ * DTO item
  */
 @Data
 @AllArgsConstructor
@@ -25,5 +25,5 @@ public class ItemDto {
     private Boolean available;
     @JsonProperty("requestId")
     private Integer request;
-    List<CommentDto> comments;
+    private List<CommentDto> comments;
 }

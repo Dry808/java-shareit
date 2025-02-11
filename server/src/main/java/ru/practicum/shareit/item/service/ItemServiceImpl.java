@@ -51,7 +51,6 @@ public class ItemServiceImpl implements ItemService {
         this.bookingRepository = bookingRepository;
         this.commentRepository = commentRepository;
         this.itemRequestRepository = itemRequestRepository;
-
     }
 
     // Создать предмет
